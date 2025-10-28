@@ -2,7 +2,7 @@ import streamlit as st
 
 # --- Page Config ---
 st.set_page_config(page_title="Realistic Calculator", layout="centered")
-st.markdown("<h1 style='text-align:center;'>🧮 Streamlit Calculator</h1>", unsafe_allow_html=True)
+st.markdown("<h1 style='text-align:center;'>🧮 Vibe-Code Calculator</h1>", unsafe_allow_html=True)
 
 # --- Initialize State ---
 if "expression" not in st.session_state:
