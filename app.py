@@ -2,7 +2,7 @@ import streamlit as st
 
 # --- Page Config ---
 st.set_page_config(page_title="Realistic Calculator", layout="centered")
-st.markdown("<h1 style='text-align:center;'>🧮 Vibe-Code Calculator</h1>", unsafe_allow_html=True)
+st.markdown("<h1 style='text-align:center;'>🧮 Streamlit Calculator</h1>", unsafe_allow_html=True)
 
 # --- Initialize State ---
 if "expression" not in st.session_state:
@@ -39,7 +39,7 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# --- Display Box (always updated) ---
+# --- Display Box ---
 st.text_area("Display", value=st.session_state.expression, height=70, label_visibility="collapsed")
 
 # --- Function to handle button click ---
@@ -54,9 +54,9 @@ def press(btn):
             st.session_state.expression = "Error"
     else:
         st.session_state.expression += btn
-    st.rerun()  # refresh UI immediately
+    st.rerun()
 
-# --- Buttons Layout (like a real calculator) ---
+# --- Calculator Layout (with proper escaping) ---
 buttons = [
     ["7", "8", "9", "÷"],
     ["4", "5", "6", "×"],
@@ -64,10 +64,12 @@ buttons = [
     ["0", ".", "%", "+"],
 ]
 
+# --- Create Grid Buttons ---
 for row in buttons:
     cols = st.columns(4)
     for i, btn in enumerate(row):
-        if cols[i].button(btn, use_container_width=True):
+        label = btn.replace("+", "➕").replace("-", "➖")
+        if cols[i].button(label, use_container_width=True):
             press(btn)
 
 # --- Bottom Row for Clear and Equal ---
