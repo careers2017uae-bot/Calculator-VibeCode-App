@@ -1,6 +1,6 @@
 import streamlit as st
 
-# --- Page Configuration ---
+# --- Page Config ---
 st.set_page_config(page_title="Realistic Calculator", layout="centered")
 st.markdown("<h1 style='text-align:center;'>🧮 Streamlit Calculator</h1>", unsafe_allow_html=True)
 
@@ -8,58 +8,55 @@ st.markdown("<h1 style='text-align:center;'>🧮 Streamlit Calculator</h1>", uns
 if "expression" not in st.session_state:
     st.session_state.expression = ""
 
-# --- CSS Styling for Realistic Look ---
+# --- Custom Styling for Realistic Look ---
 st.markdown("""
     <style>
-        div.stTextInput > div > input {
+        div[data-testid="stTextArea"] textarea {
             font-size: 28px !important;
             text-align: right;
-            border: 2px solid #4CAF50;
+            height: 70px !important;
             border-radius: 10px;
+            border: 2px solid #4CAF50;
             background-color: #f7f7f7;
             color: black;
-            height: 60px;
         }
         div.stButton > button {
-            height: 60px;
+            height: 65px;
             width: 100%;
-            font-size: 22px !important;
+            font-size: 24px !important;
             font-weight: bold;
             border-radius: 10px;
-            margin: 2px;
+            margin: 3px;
             background-color: #e0e0e0;
             color: black;
             border: none;
+            box-shadow: 1px 1px 2px #aaa;
         }
         div.stButton > button:hover {
             background-color: #4CAF50;
             color: white;
-            border: none;
-        }
-        hr {
-            margin-top: 30px;
-            margin-bottom: 10px;
         }
     </style>
 """, unsafe_allow_html=True)
 
-# --- Display Screen ---
-display = st.text_input("", st.session_state.expression, key="display", label_visibility="collapsed")
+# --- Display Box (always updated) ---
+st.text_area("Display", value=st.session_state.expression, height=70, label_visibility="collapsed")
 
-# --- Button Logic ---
+# --- Function to handle button click ---
 def press(btn):
     if btn == "C":
         st.session_state.expression = ""
     elif btn == "=":
         try:
-            expression = st.session_state.expression.replace("×", "*").replace("÷", "/")
-            st.session_state.expression = str(eval(expression))
+            exp = st.session_state.expression.replace("×", "*").replace("÷", "/")
+            st.session_state.expression = str(eval(exp))
         except Exception:
             st.session_state.expression = "Error"
     else:
         st.session_state.expression += btn
+    st.rerun()  # refresh UI immediately
 
-# --- Button Layout (like a real calculator) ---
+# --- Buttons Layout (like a real calculator) ---
 buttons = [
     ["7", "8", "9", "÷"],
     ["4", "5", "6", "×"],
@@ -67,15 +64,14 @@ buttons = [
     ["0", ".", "%", "+"],
 ]
 
-# --- Create Calculator Grid ---
 for row in buttons:
     cols = st.columns(4)
     for i, btn in enumerate(row):
         if cols[i].button(btn, use_container_width=True):
             press(btn)
 
-# --- Last Row for Clear and Equal Buttons ---
-colC, colEq = st.columns([1, 1])
+# --- Bottom Row for Clear and Equal ---
+colC, colEq = st.columns(2)
 if colC.button("C", use_container_width=True):
     press("C")
 if colEq.button("=", use_container_width=True):
@@ -83,4 +79,4 @@ if colEq.button("=", use_container_width=True):
 
 # --- Footer ---
 st.markdown("<hr>", unsafe_allow_html=True)
-st.caption("Made with ❤️ using Streamlit — A Realistic Calculator Experience")
+st.caption("Made with ❤️ using Streamlit — Realistic Working Calculator")
