@@ -68,7 +68,7 @@ buttons = [
 for row in buttons:
     cols = st.columns(4)
     for i, btn in enumerate(row):
-        label = btn.replace("+", "+").replace("-", "-")
+        label = btn.replace("+", "➕").replace("-", "➖")
         if cols[i].button(label, use_container_width=True):
             press(btn)
 
