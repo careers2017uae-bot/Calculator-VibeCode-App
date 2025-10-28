@@ -1,92 +1,87 @@
 import streamlit as st
 
-# --- Page Config ---
-st.set_page_config(page_title="Realistic Calculator", layout="centered")
-st.markdown("<h1 style='text-align:center;'>🧮 Streamlit Calculator</h1>", unsafe_allow_html=True)
+st.set_page_config(page_title="Streamlit Calculator", page_icon="🧮", layout="centered")
 
-# --- Initialize State ---
+st.markdown(
+    """
+    <style>
+    div.stButton > button {
+        width: 100%;
+        height: 70px;
+        font-size: 28px;
+        font-weight: 800;
+        border-radius: 10px;
+        background-color: #f0f2f6;
+        color: #000;
+    }
+    div.stButton > button:hover {
+        background-color: #dce3f0;
+        color: #000;
+        border: 2px solid #4b9cd3;
+    }
+    .display-box {
+        background-color: #ffffff;
+        padding: 20px;
+        border-radius: 10px;
+        font-size: 36px;
+        font-weight: 800;
+        text-align: right;
+        border: 3px solid #ccc;
+        margin-bottom: 15px;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
+
+st.title("🧮 Simple Streamlit Calculator")
+
+# Calculator logic
 if "expression" not in st.session_state:
     st.session_state.expression = ""
 
-# --- Symbol Mapping ---
-symbol_map = {
-    "0": "⓪", "1": "①", "2": "②", "3": "③", "4": "④",
-    "5": "⑤", "6": "⑥", "7": "⑦", "8": "⑧", "9": "⑨",
-    ".": "⬤", "+": "➕", "-": "➖", "*": "✖️", "/": "➗",
-    "%": "％", "C": "🔄", "=": "🟰"
-}
-
-# --- Custom Styling ---
-st.markdown("""
-    <style>
-        div[data-testid="stTextArea"] textarea {
-            font-size: 60px !important;
-            text-align: right;
-            height: 80px !important;
-            border-radius: 12px;
-            border: 3px solid #4CAF50;
-            background-color: #f7f7f7;
-            color: black;
-        }
-        div.stButton > button {
-            height: 70px;
-            width: 100%;
-            font-size: 48px !important;
-            font-weight: bold;
-            border-radius: 12px;
-            margin: 3px;
-            background-color: #e0e0e0;
-            color: black;
-            border: none;
-            box-shadow: 1px 1px 2px #aaa;
-        }
-        div.stButton > button:hover {
-            background-color: #4CAF50;
-            color: white;
-        }
-    </style>
-""", unsafe_allow_html=True)
-
-# --- Display Box ---
-st.text_area("Display", value=st.session_state.expression, height=80, label_visibility="collapsed")
-
-# --- Button Press Logic ---
-def press(btn):
-    if btn == "C":
+def press(key):
+    if key == "C":
         st.session_state.expression = ""
-    elif btn == "=":
+    elif key == "=":
         try:
-            exp = st.session_state.expression.replace("×", "*").replace("✖️", "*").replace("÷", "/").replace("➗", "/")
-            st.session_state.expression = str(eval(exp))
-        except Exception:
+            st.session_state.expression = str(eval(st.session_state.expression))
+        except:
             st.session_state.expression = "Error"
     else:
-        st.session_state.expression += btn
-    st.rerun()
+        st.session_state.expression += key
 
-# --- Button Layout ---
+# Display area
+st.markdown(f"<div class='display-box'>{st.session_state.expression}</div>", unsafe_allow_html=True)
+
+# Buttons layout
 buttons = [
-    ["7", "8", "9", "/"],
-    ["4", "5", "6", "*"],
-    ["1", "2", "3", "-"],
-    ["0", ".", "%", "+"],
+    ["7", "8", "9", "➗"],
+    ["4", "5", "6", "✖️"],
+    ["1", "2", "3", "➖"],
+    ["0", ".", "=", "➕"],
+    ["C"]
 ]
 
-# --- Create Grid Buttons ---
+# 3x3 grid layout (adjusted with last rows centered)
 for row in buttons:
     cols = st.columns(4)
-    for i, btn in enumerate(row):
-        label = symbol_map.get(btn, btn)
-        if cols[i].button(label, use_container_width=True):
-            press(btn)
-
-# --- Bottom Row (Clear + Equal) ---
-colC, colEq = st.columns(2)
-if colC.button(symbol_map["C"], use_container_width=True):
-    press("C")
-if colEq.button(symbol_map["="], use_container_width=True):
-    press("=")
-
-# --- Footer ---
-st.markdown("<hr>", unsafe_allow_html=True)
-st.caption("Made with ❤️ using Streamlit — Emoji-Style Realistic Calculator")
+    for i, key in enumerate(row):
+        if key == "➗":
+            label = "➗"
+            val = "/"
+        elif key == "✖️":
+            label = "✖️"
+            val = "*"
+        elif key == "➖":
+            label = "➖"
+            val = "-"
+        elif key == "➕":
+            label = "➕"
+            val = "+"
+        else:
+            label = key
+            val = key
+        with cols[i]:
+            if st.button(label):
+                press(val)
