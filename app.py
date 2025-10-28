@@ -20,7 +20,7 @@ symbol_map = {
 st.markdown("""
     <style>
         div[data-testid="stTextArea"] textarea {
-            font-size: 30px !important;
+            font-size: 60px !important;
             text-align: right;
             height: 80px !important;
             border-radius: 12px;
@@ -31,7 +31,7 @@ st.markdown("""
         div.stButton > button {
             height: 70px;
             width: 100%;
-            font-size: 28px !important;
+            font-size: 48px !important;
             font-weight: bold;
             border-radius: 12px;
             margin: 3px;
